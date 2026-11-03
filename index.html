@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es" Aclass="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebastián Gazzia | Infraestructura IT & SysAdmin</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#070a10',
+                        darkcard: 'rgba(15, 23, 42, 0.75)',
+                        darkborder: 'rgba(255, 255, 255, 0.08)',
+                        cyberRed: { 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c' },
+                        cyberGreen: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+                        cyberBlue: { 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb' },
+                        cyberPurple: { 400: '#c084fc', 500: '#8b5cf6', 600: '#7c3aed' },
+                        cyberAmber: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #070a10;
+            color: #f1f5f9;
+            overflow-x: hidden;
+        }
+
+        /* Canvas estelar dinámico */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070a10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc2626;
+        }
+
+        /* Estilo de secciones fluidas sin cuadros masivos */
+        .fluid-section {
+            background: rgba(13, 19, 32, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 1.5rem;
+            position: relative;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .header-footer-bar {
+            background-color: rgba(7, 10, 16, 0.92);
+            backdrop-filter: blur(16px);
+        }
+
+        /* Animación suave para modal */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-pop {
+            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyberRed-600 selection:text-white">
+
+    <!-- CANVAS ANIMADO ESTILO ESPACIO / STARWARS -->
+    <canvas id="starfield"></canvas>
+
+    <!-- HEADER COMPACTO CON MENÚ NAVEGABLE & ICONOS RÁPIDOS -->
+    <header class="sticky top-0 z-50 header-footer-bar border-b border-white/10 shadow-2xl px-4 sm:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Izquierda: Logo SG -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyberRed-600 to-cyberRed-800 border border-cyberRed-400/50 flex items-center justify-center text-white font-extrabold text-base shadow-lg shadow-cyberRed-900/50 group-hover:scale-105 transition-transform">
+                    SG
+                </div>
+            </a>
+
+            <!-- Centro: Nombre & Accesos Rápidos (Iconos Directos) -->
+            <div class="flex items-center gap-4 sm:gap-6">
+                <a href="#hero" class="text-base sm:text-xl font-black text-white tracking-tight hover:text-cyberRed-400 transition-colors font-mono">
+                    Seba Gazzia
+                </a>
+
+                <div class="hidden sm:flex items-center gap-3 border-l border-white/15 pl-4">
+                    <!-- WhatsApp Icon direct -->
+                    <a href="https://wa.me/5491169089594?text=Hola%20Sebasti%C3%A1n,%20me%20contacto%20desde%20tu%20web" target="_blank" rel="noopener" class="text-slate-300 hover:text-cyberGreen-400 text-lg transition-colors" title="WhatsApp Directo">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <!-- Mail Icon direct -->
+                    <a href="mailto:sebastian.gazzia@gmail.com" class="text-slate-300 hover:text-cyberRed-400 text-lg transition-colors" title="Enviar Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <!-- LinkedIn Icon direct -->
+                    <a href="https://www.linkedin.com/in/sebastian-gazzia" target="_blank" rel="noopener" class="text-slate-300 hover:text-cyberBlue-400 text-lg transition-colors" title="LinkedIn Profile">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <!-- WTICS Direct Button -->
+                    <a href="https://www.wtics.com.ar" target="_blank" rel="noopener" class="bg-cyberBlue-600/30 hover:bg-cyberBlue-600 text-cyberBlue-400 hover:text-white border border-cyberBlue-500/50 px-3 py-1 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fas fa-globe text-xs"></i> WTICS
+                    </a>
+                </div>
+            </div>
+
+            <!-- Derecha: Menú Kebob (3 Puntos) -->
+            <div class="relative">
+                <button id="menu-toggle-btn" class="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-700/60 hover:border-cyberRed-500 text-slate-200 hover:text-white flex items-center justify-center transition-all focus:outline-none shadow-md">
+                    <i class="fas fa-ellipsis-v text-base"></i>
+                </button>
+
+                <!-- Menú Desplegable -->
+                <div id="nav-dropdown" class="hidden absolute right-0 mt-3 w-56 bg-slate-950/95 backdrop-blur-2xl border border-cyberRed-600/40 rounded-2xl shadow-2xl p-2 z-50 font-mono text-xs space-y-1">
+                    <a href="#about" class="dropdown-item block px-4 py-2.5 rounded-xl text-slate-200 hover:bg-cyberRed-900/30 hover:text-white transition-all flex items-center gap-2.5">
+                        <i class="fas fa-user-shield text-cyberRed-500 w-4"></i> Perfil & Visión
+                    </a>
+                    <a href="#wtics" class="dropdown-item block px-4 py-2.5 rounded-xl text-cyberBlue-400 hover:bg-cyberBlue-900/30 transition-all flex items-center gap-2.5 font-bold">
+                        <i class="fas fa-rocket text-cyberBlue-400 w-4"></i> WTICS Emprendimiento
+                    </a>
+                    <a href="#skills" class="dropdown-item block px-4 py-2.5 rounded-xl text-slate-200 hover:bg-cyberGreen-900/30 hover:text-white transition-all flex items-center gap-2.5">
+                        <i class="fas fa-microchip text-cyberGreen-500 w-4"></i> Habilidades Técnicas
+                    </a>
+                    <a href="#experience" class="dropdown-item block px-4 py-2.5 rounded-xl text-slate-200 hover:bg-cyberRed-900/30 hover:text-white transition-all flex items-center gap-2.5">
+                        <i class="fas fa-briefcase text-cyberRed-500 w-4"></i> Trayectoria Laboral
+                    </a>
+                    <a href="#education" class="dropdown-item block px-4 py-2.5 rounded-xl text-slate-200 hover:bg-cyberPurple-900/30 hover:text-white transition-all flex items-center gap-2.5">
+                        <i class="fas fa-graduation-cap text-cyberPurple-500 w-4"></i> Educación & Cursos
+                    </a>
+                    <a href="#contact" class="dropdown-item block px-4 py-2.5 rounded-xl text-slate-200 hover:bg-cyberAmber-900/30 hover:text-white transition-all flex items-center gap-2.5">
+                        <i class="fas fa-file-invoice-dollar text-cyberAmber-500 w-4"></i> Presupuesto / Contacto
+                    </a>
+                    <div class="border-t border-slate-800 pt-1">
+                        <button onclick="window.print()" class="w-full text-left px-4 py-2 rounded-xl text-cyberRed-400 hover:bg-cyberRed-900/40 flex items-center gap-2">
+                            <i class="fas fa-print w-4"></i> Imprimir / Guardar CV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL FLUIDO Y DIRECTO -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-12 w-full">
+
+        <!-- PRESENTACIÓN HERO (DIRECTA Y IMPACTANTE) -->
+        <section id="hero" class="fluid-section p-6 sm:p-10 border-l-4 border-l-cyberRed-600 border border-white/10 shadow-2xl">
+            <div class="flex flex-col lg:flex-row items-center gap-8">
+                
+                <!-- Foto de Perfil integrada -->
+                <div class="relative shrink-0">
+                    <div class="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-cyberRed-500 p-1 bg-slate-900 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" 
+                             alt="Sebastián Gazzia" 
+                             class="w-full h-full object-cover rounded-full"
+                             onerror="this.src='https://placehold.co/400x400/1e293b/ffffff?text=Sebasti%C3%A1n+Gazzia'">
+                    </div>
+                    <span class="absolute bottom-2 right-2 w-5 h-5 bg-cyberGreen-500 border-2 border-darkbg rounded-full" title="Disponible"></span>
+                </div>
+
+                <!-- Info Principal -->
+                <div class="space-y-4 text-center lg:text-left flex-1">
+                    <div>
+                        <span class="text-cyberRed-400 font-mono text-xs font-bold uppercase tracking-widest">// Infraestructura & Cloud SysAdmin</span>
+                        <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight mt-1">Sebastián Gazzia</h1>
+                        <p class="text-base sm:text-lg font-mono text-cyberGreen-400 mt-1">Técnico Superior en Soporte de Infraestructura IT</p>
+                    </div>
+
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl">
+                        Especialista en infraestructura tecnológica con más de 10 años de experiencia administrando plataformas críticas en <strong class="text-white">Windows Server, Linux, VMware, Oracle Cloud (OCI) y Azure</strong>. Orientado al diseño de arquitecturas resilientes, resguardo de datos con <strong class="text-white">Veeam Backup</strong> y gestión integral de servicios informáticos.
+                    </p>
+
+                    <!-- Acciones Rápidas -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2 font-mono">
+                        <a href="https://wa.me/5491169089594?text=Hola%20Sebasti%C3%A1n,%20me%20gustar%C3%ADa%20hacerte%20una%20consulta" 
+                           target="_blank" rel="noopener"
+                           class="bg-cyberGreen-600 hover:bg-cyberGreen-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all shadow-lg flex items-center gap-2">
+                            <i class="fab fa-whatsapp text-sm"></i> WhatsApp
+                        </a>
+                        <a href="#contact" 
+                           class="bg-cyberAmber-600 hover:bg-cyberAmber-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all shadow-lg flex items-center gap-2">
+                            <i class="fas fa-file-invoice-dollar"></i> Pedir Presupuesto
+                        </a>
+                        <a href="https://www.wtics.com.ar" target="_blank" rel="noopener"
+                           class="bg-cyberBlue-600/30 border border-cyberBlue-500 text-cyberBlue-300 hover:bg-cyberBlue-600 hover:text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all flex items-center gap-2">
+                            <i class="fas fa-globe"></i> wtics.com.ar
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- EMPRENDIMIENTO PERSONAL WTICS (SECCIÓN AZUL) -->
+        <section id="wtics" class="fluid-section p-6 sm:p-8 border-l-4 border-l-cyberBlue-500 border border-white/10 shadow-xl">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="space-y-3 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyberBlue-500/10 border border-cyberBlue-500/30 text-cyberBlue-400 text-xs font-mono font-bold">
+                        <i class="fas fa-star text-xs"></i> EMPRENDIMIENTO PERSONAL
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white">WTICS - Soluciones & Consultoría IT</h2>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                        Servicios informáticos integrales para pymes y empresas: mantenimiento de servidores, redes corporativas, virtualización, implementación de backups y consultoría tecnológica personalizada.
+                    </p>
+                </div>
+
+                <div class="shrink-0 w-full md:w-auto">
+                    <a href="https://www.wtics.com.ar" target="_blank" rel="noopener font-mono" 
+                       class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-cyberBlue-600 hover:bg-cyberBlue-500 text-white font-bold px-6 py-3 rounded-xl text-xs transition-all shadow-lg">
+                        <i class="fas fa-external-link-alt"></i> Visitar www.wtics.com.ar
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOBRE MÍ & OBJETIVO PROFESIONAL -->
+        <section id="about" class="fluid-section p-6 sm:p-8 border-l-4 border-l-cyberRed-500 border border-white/10">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-6">
+                <h2 class="text-xl font-bold text-white font-mono flex items-center gap-2">
+                    <i class="fas fa-user-shield text-cyberRed-500"></i> Perfil & Objetivos
+                </h2>
+                <span class="text-xs font-mono text-slate-500">01 // VISIÓN</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm text-slate-300">
+                <div class="space-y-2">
+                    <h3 class="font-bold text-white text-base font-mono text-cyberRed-400">Perfil</h3>
+                    <p class="leading-relaxed">
+                        Soy una persona leal, proactiva, ordenada y orientada a resultados. Entusiasta y altamente comprometido en brindar soluciones eficientes para optimizar la continuidad operativa de los sistemas informáticos.
+                    </p>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-bold text-white text-base font-mono text-cyberGreen-400">Objetivo</h3>
+                    <p class="leading-relaxed">
+                        Desarrollarme en el área de sistemas informáticos para continuar progresando profesionalmente, aportando valor práctico a las organizaciones y manteniendo la constante actualización en infraestructura y Cloud.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HABILIDADES TÉCNICAS (SECCIÓN VERDE) -->
+        <section id="skills" class="fluid-section p-6 sm:p-8 border-l-4 border-l-cyberGreen-500 border border-white/10">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-6">
+                <h2 class="text-xl font-bold text-white font-mono flex items-center gap-2">
+                    <i class="fas fa-microchip text-cyberGreen-500"></i> Habilidades Técnicas
+                </h2>
+                <span class="text-xs font-mono text-slate-500">02 // STACK</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+                
+                <!-- Dominio Cloud & Virtualización -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-cyberGreen-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-cloud"></i> Virtualización & Cloud
+                    </h3>
+                    <ul class="space-y-2 text-slate-300">
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>VMware vSphere / ESXi</span>
+                            <span class="text-cyberGreen-400 font-bold">Avanzado</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>Oracle Cloud (OCI)</span>
+                            <span class="text-cyberGreen-400 font-bold">Admin</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>Azure & Azure AD</span>
+                            <span class="text-cyberGreen-400 font-bold">MS-AZ 104</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Docker</span>
+                            <span class="text-cyberGreen-400 font-bold">Contenedores</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sistemas Wintel & Linux -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-cyberRed-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-server"></i> Sistemas & Servidores
+                    </h3>
+                    <ul class="space-y-2 text-slate-300">
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>Windows Server / AD</span>
+                            <span class="text-cyberRed-400 font-bold">Referente</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>GPO, DNS, Clusters</span>
+                            <span class="text-cyberRed-400 font-bold">Avanzado</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>Linux (Ubuntu / Debian)</span>
+                            <span class="text-cyberRed-400 font-bold">SysAdmin</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>SQL / PowerShell</span>
+                            <span class="text-cyberRed-400 font-bold">Scripts</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Redes & Backup -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-cyberBlue-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-network-wired"></i> Redes & Seguridad
+                    </h3>
+                    <ul class="space-y-2 text-slate-300">
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>Veeam Backup</span>
+                            <span class="text-cyberBlue-400 font-bold">DRP / Copias</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>Switches Cisco / HP</span>
+                            <span class="text-cyberBlue-400 font-bold">Configuración</span>
+                        </li>
+                        <li class="flex justify-between border-b border-white/5 pb-1">
+                            <span>AP Ubiquiti / TP-Link</span>
+                            <span class="text-cyberBlue-400 font-bold">Wi-Fi Admin</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span>Trend Micro Antivirus</span>
+                            <span class="text-cyberBlue-400 font-bold">Seguridad</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TRAYECTORIA LABORAL (SECCIÓN ROJA) CON FILTRO EN TIEMPO REAL -->
+        <section id="experience" class="fluid-section p-6 sm:p-8 border-l-4 border-l-cyberRed-600 border border-white/10 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-white font-mono flex items-center gap-2">
+                        <i class="fas fa-briefcase text-cyberRed-500"></i> Trayectoria Laboral
+                    </h2>
+                    <span class="text-xs font-mono text-slate-500">03 // EXPERIENCIA EXPERTA</span>
+                </div>
+
+                <!-- Buscador / Filtro -->
+                <div class="relative w-full sm:w-64 font-mono">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                    <input type="text" id="exp-search" placeholder="Filtrar por tecnología..." 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyberRed-500 transition-all">
+                </div>
+            </div>
+
+            <div id="timeline" class="space-y-4">
+
+                <!-- WTICS -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberBlue-500/50 transition-all" data-tech="wtics emprendimiento consultoria cloud soporte infraestructura">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-mono font-bold text-cyberBlue-400 bg-cyberBlue-900/40 px-2 py-0.5 rounded border border-cyberBlue-500/30">EMPRENDIMIENTO</span>
+                            <h3 class="text-base font-bold text-white">WTICS - Servicios Informáticos</h3>
+                        </div>
+                        <a href="https://www.wtics.com.ar" target="_blank" rel="noopener" class="text-xs font-mono text-cyberBlue-400 hover:underline">
+                            www.wtics.com.ar <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </a>
+                    </div>
+                    <p class="text-xs text-slate-300">Fundador y consultor IT. Soporte de infraestructura, virtualización, soluciones en la nube, planes de contingencia y atención a clientes empresariales.</p>
+                </div>
+
+                <!-- Kaizen2b -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="kaizen2b dguiaf hacienda wintel windows server gpo ad clusters dns sql">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                        <h3 class="text-base font-bold text-white">Kaizen2b - DGUIAF (Hacienda CABA) <span class="text-xs text-cyberRed-400 font-mono font-normal">| Soporte Wintel</span></h3>
+                        <span class="text-xs font-mono text-slate-400">02/02/2026 – 10/08/2026</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Administración de servidores Windows Server (GPO, Active Directory, Clusters, DNS). Migraciones y ejecución de scripts SQL. Virtualización de la infraestructura y documentación técnica.</p>
+                </div>
+
+                <!-- Makro -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="makro vmware vsphere oracle cloud oci veeam backup linux sharepoint microsoft">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                        <h3 class="text-base font-bold text-white">HiperMayorista Makro <span class="text-xs text-cyberRed-400 font-mono font-normal">| Soporte Infraestructura Cloud</span></h3>
+                        <span class="text-xs font-mono text-slate-400">04/12/2023 – 30/07/2025</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Mantenimiento de infraestructura VMware vSphere. Administración de plataformas en Oracle Cloud (OCI). Referente técnico Microsoft/Windows. Copias de seguridad con Veeam Backup y administración de entornos Linux (Ubuntu/Debian).</p>
+                </div>
+
+                <!-- CTL Catalinas -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="ctl catalinas center gsuite office 365 azure ad jira ubiquiti cisco hp switches docker trend micro">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                        <h3 class="text-base font-bold text-white">CTL (Catalinas Center) <span class="text-xs text-cyberRed-400 font-mono font-normal">| Infraestructura IT & Soporte</span></h3>
+                        <span class="text-xs font-mono text-slate-400">26/10/2021 – 30/11/2023</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Gestión de cuentas Google Workspace y Office 365. Administración de Azure AD, AP Ubiquiti/TP-Link, Switches Cisco/HP. Implementación de contenedores Docker y respaldo Veeam.</p>
+                </div>
+
+                <!-- CTL OSDE -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="osde ctl soporte onsite active directory nagios">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                        <h3 class="text-sm font-bold text-white">CTL (Cliente OSDE) <span class="text-xs text-slate-400 font-normal">| Soporte Técnico OnSite</span></h3>
+                        <span class="text-xs font-mono text-slate-400">01/02/2021 – 20/10/2021</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Soporte técnico directo al personal de emergencias. Manejo de Active Directory y monitoreo con Nagios.</p>
+                </div>
+
+                <!-- REMASA -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="remasa ypf geociencias gsuite tickets inventario">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                        <h3 class="text-sm font-bold text-white">REMASA <span class="text-xs text-slate-400 font-normal">| Soporte CSG YPF</span></h3>
+                        <span class="text-xs font-mono text-slate-400">10/06/2019 – 01/02/2021</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Soporte técnico on-site y remoto para aplicaciones de Geociencias en YPF. Control de inventario y GSuite.</p>
+                </div>
+
+                <!-- Groupon -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="groupon responsable it latam freshdesk">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                        <h3 class="text-sm font-bold text-white">Groupon (Needish) <span class="text-xs text-slate-400 font-normal">| Responsable IT Argentina</span></h3>
+                        <span class="text-xs font-mono text-slate-400">03/06/2018 – 26/04/2019</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Encargado del área IT en oficinas de Argentina y soporte LATAM. Gestión de proveedores y FreshDesk.</p>
+                </div>
+
+                <!-- Middle Sea & Walmart -->
+                <div class="exp-card p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-cyberRed-500/50 transition-all" data-tech="walmart middle sea ibm blades pos remedy">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                        <h3 class="text-sm font-bold text-white">Wal-Mart & Middle Sea <span class="text-xs text-slate-400 font-normal">| Soporte Aplicaciones & Servidores</span></h3>
+                        <span class="text-xs font-mono text-slate-400">2010 – 2018</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Soporte a servidores IBM Blades, sistemas POS 4690, aperturas de sucursales ChangoMás y administración de Active Directory.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- EDUCACIÓN & CURSOS (PROMEDIO ISTEA REUBICADO ÚNICAMENTE AQUÍ) -->
+        <section id="education" class="fluid-section p-6 sm:p-8 border-l-4 border-l-cyberPurple-500 border border-white/10 space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-xl font-bold text-white font-mono flex items-center gap-2">
+                    <i class="fas fa-graduation-cap text-cyberPurple-500"></i> Formación & Certificaciones
+                </h2>
+                <span class="text-xs font-mono text-slate-500">04 // ACADÉMICO</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- Carrera Principal (Con Promedio destacado aquí) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="p-5 rounded-xl bg-slate-900/80 border border-cyberPurple-500/40 space-y-3">
+                        <span class="text-[10px] font-mono font-bold text-cyberPurple-400 bg-cyberPurple-900/40 px-2 py-0.5 rounded border border-cyberPurple-500/30">ESTUDIO SUPERIOR FINALIZADO</span>
+                        <h3 class="text-base font-bold text-white">Tecnicatura Superior en Soporte de Infraestructura</h3>
+                        <p class="text-xs text-slate-300 font-mono">Institución: ISTEA (2020 – 2024)</p>
+                        
+                        <!-- El Promedio se muestra únicamente aquí -->
+                        <div class="bg-cyberGreen-950/60 border border-cyberGreen-500/40 text-cyberGreen-400 p-3 rounded-lg text-xs font-mono font-bold flex items-center justify-between">
+                            <span>Promedio Académico:</span>
+                            <span class="text-sm text-white bg-cyberGreen-600 px-2.5 py-0.5 rounded">8.63 / 10</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/40 border border-white/5 space-y-1">
+                        <h4 class="text-xs font-bold text-white font-mono">Bachiller en Ciencias</h4>
+                        <p class="text-xs text-slate-400">Instituto San Vicente de Paul (2003 - 2009)</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/40 border border-white/5 space-y-1 font-mono text-xs">
+                        <span class="text-slate-400 font-bold block mb-1">Idiomas:</span>
+                        <div class="flex justify-between text-slate-300">
+                            <span>Español: Nativo</span>
+                            <span>Inglés: Intermedio</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cursos -->
+                <div class="lg:col-span-7 p-5 rounded-xl bg-slate-900/40 border border-white/10 space-y-3">
+                    <h3 class="text-xs font-bold text-cyberPurple-400 uppercase tracking-wider font-mono">Cursos & Capacitaciones Especializadas</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono text-slate-300">
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">MS-AZ 104 Azure Admin</span>
+                            <span class="text-slate-500">IT College</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">VMware vSphere 6.7</span>
+                            <span class="text-slate-500">Udemy</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">Programa Team Leader</span>
+                            <span class="text-slate-500">Educación Biz</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">PNL (Niveles 1 al 4)</span>
+                            <span class="text-slate-500">Educación Biz</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">Gestión Proyectos Scrum</span>
+                            <span class="text-slate-500">Educ IT</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">MySQL / SQL Server</span>
+                            <span class="text-slate-500">Educación IT</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">Técnico en Redes</span>
+                            <span class="text-slate-500">CETIA</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-950/60 rounded border border-white/5">
+                            <span class="text-white font-bold block">Armado de PC & Python</span>
+                            <span class="text-slate-500">CETIA / CABA</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SOLICITUD DE PRESUPUESTO / CONTACTO (SECCIÓN AMARILLO/AMBER) -->
+        <section id="contact" class="fluid-section p-6 sm:p-8 border-l-4 border-l-cyberAmber-500 border border-white/10 space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                    <h2 class="text-xl font-bold text-white font-mono flex items-center gap-2">
+                        <i class="fas fa-file-invoice-dollar text-cyberAmber-500"></i> Solicitar Presupuesto / Asistencia
+                    </h2>
+                    <p class="text-xs text-slate-400">Envía un mensaje para consultas sobre servicios IT o contrataciones</p>
+                </div>
+                <span class="text-xs font-mono text-slate-500">05 // CONTACTO</span>
+            </div>
+
+            <form id="contact-form" onsubmit="submitForm(event)" class="space-y-4 max-w-2xl font-mono text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-300 font-bold mb-1">Nombre / Empresa</label>
+                        <input type="text" id="form-name" required placeholder="Tu nombre" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyberAmber-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-bold mb-1">Email de contacto</label>
+                        <input type="email" id="form-email" required placeholder="email@ejemplo.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyberAmber-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1">Detalle del servicio requerimiento</label>
+                    <textarea id="form-msg" required rows="3" placeholder="Describe brevemente lo que necesitas..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-cyberAmber-500"></textarea>
+                </div>
+                <button type="submit" class="bg-cyberAmber-600 hover:bg-cyberAmber-500 text-white font-bold px-6 py-3 rounded-xl transition-all shadow-lg flex items-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Enviar Consulta
+                </button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- FOOTER CENTRADO & COMPACTO -->
+    <footer class="header-footer-bar border-t border-white/10 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col items-center justify-center space-y-3 text-center">
+            
+            <!-- Iconos Cliqueables Directos -->
+            <div class="flex items-center justify-center space-x-5 text-lg">
+                <a href="https://www.linkedin.com/in/sebastian-gazzia" target="_blank" rel="noopener" 
+                   class="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 hover:border-cyberBlue-500 text-slate-300 hover:text-cyberBlue-400 flex items-center justify-center transition-all" title="LinkedIn">
+                    <i class="fab fa-linkedin-in text-sm"></i>
+                </a>
+                <a href="https://wa.me/5491169089594?text=Hola%20Sebasti%C3%A1n" target="_blank" rel="noopener" 
+                   class="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 hover:border-cyberGreen-500 text-slate-300 hover:text-cyberGreen-400 flex items-center justify-center transition-all" title="WhatsApp">
+                    <i class="fab fa-whatsapp text-sm"></i>
+                </a>
+                <a href="mailto:sebastian.gazzia@gmail.com" 
+                   class="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 hover:border-cyberRed-500 text-slate-300 hover:text-cyberRed-400 flex items-center justify-center transition-all" title="Email">
+                    <i class="fas fa-envelope text-sm"></i>
+                </a>
+                <a href="https://www.wtics.com.ar" target="_blank" rel="noopener" 
+                   class="w-9 h-9 rounded-full bg-slate-900 border border-slate-700 hover:border-cyberBlue-500 text-slate-300 hover:text-cyberBlue-400 flex items-center justify-center transition-all" title="WTICS Sitio Web">
+                    <i class="fas fa-globe text-sm"></i>
+                </a>
+            </div>
+
+            <!-- Derechos Reservados Centrados -->
+            <div class="text-xs font-mono text-slate-400 tracking-wider">
+                © 2026 Sebastián Gazzia. Todos los derechos reservados.
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- MODAL POP-UP CONFIRMACIÓN ENVIADA -->
+    <div id="confirmation-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-slate-900 border-2 border-cyberGreen-500 rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl animate-pop">
+            <div class="w-12 h-12 rounded-full bg-cyberGreen-500/20 text-cyberGreen-400 flex items-center justify-center mx-auto text-2xl border border-cyberGreen-500">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-bold text-white font-mono">¡Consulta enviada!</h3>
+                <p class="text-xs text-slate-300 font-mono">Ya te contactaré. Gracias!!</p>
+            </div>
+            <button onclick="closeModal()" class="w-full bg-cyberGreen-600 hover:bg-cyberGreen-500 text-white font-mono font-bold text-xs py-2.5 rounded-xl transition-colors">
+                Aceptar
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: STARWARS CANVAS & INTERACTIVIDAD -->
+    <script>
+        // Starfield Motion Animation
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        const numStars = 140;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = (Math.random() - 0.5) * canvas.width;
+                this.y = (Math.random() - 0.5) * canvas.height;
+                this.z = Math.random() * canvas.width;
+            }
+
+            update() {
+                this.z -= 1.5;
+                if (this.z <= 0) {
+                    this.reset();
+                    this.z = canvas.width;
+                }
+            }
+
+            draw() {
+                const k = 256 / this.z;
+                const px = this.x * k + canvas.width / 2;
+                const py = this.y * k + canvas.height / 2;
+
+                if (px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height) {
+                    const size = Math.max(0.2, (1 - this.z / canvas.width) * 2.2);
+                    ctx.beginPath();
+                    ctx.fillStyle = this.z < canvas.width * 0.25 ? '#ef4444' : '#f8fafc';
+                    ctx.arc(px, py, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        for (let i = 0; i < numStars; i++) {
+            stars.push(new Star());
+        }
+
+        function animateStars() {
+            ctx.fillStyle = 'rgba(7, 10, 16, 0.35)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(animateStars);
+        }
+
+        animateStars();
+
+        // Menú Kebob Desplegable
+        const menuBtn = document.getElementById('menu-toggle-btn');
+        const dropdown = document.getElementById('nav-dropdown');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+        });
+
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => dropdown.classList.add('hidden'));
+        });
+
+        // Buscador Filtro de Experiencia
+        const searchInput = document.getElementById('exp-search');
+        const expCards = document.querySelectorAll('.exp-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            expCards.forEach(card => {
+                const tech = card.getAttribute('data-tech').toLowerCase();
+                const text = card.textContent.toLowerCase();
+                card.style.display = (tech.includes(query) || text.includes(query)) ? 'block' : 'none';
+            });
+        });
+
+        // Modal de Confirmación Formulario
+        function submitForm(e) {
+            e.preventDefault();
+            document.getElementById('contact-form').reset();
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
