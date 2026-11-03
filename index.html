@@ -729,6 +729,48 @@
         function closeModal() {
             document.getElementById('confirmation-modal').classList.add('hidden');
         }
+async function submitForm(e) {
+    e.preventDefault(); // Evita que la página recargue de forma tradicional
+    const form = e.target;
+    const btn = document.getElementById('form-submit-btn');
+    const originalBtnContent = btn.innerHTML;
+
+    // Indicador visual de carga en el botón
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Enviando...`;
+
+    try {
+        // Petición asíncrona hacia tu endpoint de Formspree
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            form.reset(); // Limpia los campos del formulario
+            openModal();  // Muestra tu ventana emergente: "¡Consulta enviada! Ya te contactaré. Gracias!!"
+        } else {
+            alert("Ocurrió un error al enviar la consulta. Por favor verifica los datos.");
+        }
+    } catch (error) {
+        alert("Error de conexión. Intenta nuevamente.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnContent;
+    }
+}
+
+function openModal() {
+    document.getElementById('confirmation-modal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('confirmation-modal').classList.add('hidden');
+}
+        
     </script>
 </body>
 </html>
